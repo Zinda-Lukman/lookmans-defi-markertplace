@@ -1,0 +1,3 @@
+
+method:; forge inspect service_marketplace methods
+forge inspect service_marketplace  methods > method.md
