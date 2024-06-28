@@ -11,17 +11,33 @@ import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorVotesQ
 import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorTimelockControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract LookmansGovernance is Initializable, GovernorUpgradeable, GovernorSettingsUpgradeable, GovernorCountingSimpleUpgradeable, GovernorStorageUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable, GovernorTimelockControlUpgradeable {
+contract LookmansGovernance is
+    Initializable,
+    GovernorUpgradeable,
+    GovernorSettingsUpgradeable,
+    GovernorCountingSimpleUpgradeable,
+    GovernorStorageUpgradeable,
+    GovernorVotesUpgradeable,
+    GovernorVotesQuorumFractionUpgradeable,
+    GovernorTimelockControlUpgradeable
+{
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(IVotes _token, TimelockControllerUpgradeable _timelock, uint256 _votingPeriod, unint256 _votingDelay)
-        initializer public
-    {
+    function initialize(
+        IVotes _token,
+        TimelockControllerUpgradeable _timelock,
+        uint256 _votingPeriod,
+        uint256 _votingDelay
+    ) public initializer {
         __Governor_init("LookmansGovernance");
-        __GovernorSettings_init(_votingDelay days, _votingPeriod weeks, 0);
+        __GovernorSettings_init(
+            uint48(_votingDelay * 1 days),
+            uint32(_votingPeriod * 1 weeks),
+            0
+        );
         __GovernorCountingSimple_init();
         __GovernorStorage_init();
         __GovernorVotes_init(_token);
@@ -49,7 +65,9 @@ contract LookmansGovernance is Initializable, GovernorUpgradeable, GovernorSetti
         return super.votingPeriod();
     }
 
-    function quorum(uint256 blockNumber)
+    function quorum(
+        uint256 blockNumber
+    )
         public
         view
         override(GovernorUpgradeable, GovernorVotesQuorumFractionUpgradeable)
@@ -58,7 +76,9 @@ contract LookmansGovernance is Initializable, GovernorUpgradeable, GovernorSetti
         return super.quorum(blockNumber);
     }
 
-    function state(uint256 proposalId)
+    function state(
+        uint256 proposalId
+    )
         public
         view
         override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
@@ -67,7 +87,9 @@ contract LookmansGovernance is Initializable, GovernorUpgradeable, GovernorSetti
         return super.state(proposalId);
     }
 
-    function proposalNeedsQueuing(uint256 proposalId)
+    function proposalNeedsQueuing(
+        uint256 proposalId
+    )
         public
         view
         override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
@@ -85,30 +107,67 @@ contract LookmansGovernance is Initializable, GovernorUpgradeable, GovernorSetti
         return super.proposalThreshold();
     }
 
-    function _propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description, address proposer)
+    function _propose(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        string memory description,
+        address proposer
+    )
         internal
         override(GovernorUpgradeable, GovernorStorageUpgradeable)
         returns (uint256)
     {
-        return super._propose(targets, values, calldatas, description, proposer);
+        return
+            super._propose(targets, values, calldatas, description, proposer);
     }
 
-    function _queueOperations(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
+    function _queueOperations(
+        uint256 proposalId,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    )
         internal
         override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
         returns (uint48)
     {
-        return super._queueOperations(proposalId, targets, values, calldatas, descriptionHash);
+        return
+            super._queueOperations(
+                proposalId,
+                targets,
+                values,
+                calldatas,
+                descriptionHash
+            );
     }
 
-    function _executeOperations(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
+    function _executeOperations(
+        uint256 proposalId,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    )
         internal
         override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
     {
-        super._executeOperations(proposalId, targets, values, calldatas, descriptionHash);
+        super._executeOperations(
+            proposalId,
+            targets,
+            values,
+            calldatas,
+            descriptionHash
+        );
     }
 
-    function _cancel(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
+    function _cancel(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    )
         internal
         override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
         returns (uint256)
