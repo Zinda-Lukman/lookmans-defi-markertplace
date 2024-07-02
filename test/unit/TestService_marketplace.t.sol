@@ -7,6 +7,8 @@ import {IERC20} from "@openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {Lookmans} from "../../src/Erc20/LookmansToken.sol";
 import {Service_marketplace} from "../../src/service_marketplace.sol";
 
+import {Upgrades} from "@openzeppelin-upgrades/Upgrades.sol";
+
 contract TestService_marketplace is Test {
     Service_marketplace public market;
     Lookmans public payToken;
@@ -17,11 +19,24 @@ contract TestService_marketplace is Test {
     uint buyerFunds = 10000e18;
 
     function setUp() public {
-        market = new Service_marketplace();
+        market = Upgrades.deployTransparentProxy(
+            "Service_marketplace.sol",
+            admin,
+            abi.encodeCall(
+                market.initialize,
+                payable(admin),
+                _platformFee,
+                address(payToken)
+            )
+        );
 
-        payToken = new Lookmans();
-        payToken.initialize(admin, admin, admin);
-        market.initialize(payable(admin), _platformFee, address(payToken));
+        payToken = Upgrades.deployTransparentProxy(
+            "Service_marketplace.sol",
+            admin,
+            abi.encodeCall(payToken.initialize, admin, admin, admin)
+        );
+        //payToken.initialize(admin, admin, admin);
+        //market.initialize(payable(admin), _platformFee, address(payToken));
 
         payToken.mint(buyer, buyerFunds);
 

@@ -1,10 +1,4 @@
-//SPDX-lincence-Identifintier: MIT
-/**
- *  - create a service with price
- *  - list it
- *  -unlist it
-     - negotiate with price
-*/
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.20;
 import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
