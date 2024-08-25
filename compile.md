@@ -162,3 +162,5 @@ Watch options:
 
       --format-json
           Output the compilation errors in the json format. This is useful when you want to use the output in other tools
+
+terminal script: forge test --evm-version cancun
